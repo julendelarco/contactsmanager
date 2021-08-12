@@ -3,6 +3,8 @@ package com.itechis.contactsmanager.model;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class Contact implements Serializable {
@@ -13,75 +15,53 @@ public class Contact implements Serializable {
     private String imageUrl;
     private String name;
     private String surname;
+    private String description;
     private Date birthDate;
-    private Date meet_date;
-
-    public Contact(Long id, String imageUrl, String name, String surname, Date birthDate, Date meet_date) {
-        this.id = id;
-        this.imageUrl = imageUrl;
-        this.name = name;
-        this.surname = surname;
-        this.birthDate = birthDate;
-        this.meet_date = meet_date;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getSurname() {
-        return surname;
-    }
-
-    public void setSurname(String surname) {
-        this.surname = surname;
-    }
-
-    public Date getBirthDate() {
-        return birthDate;
-    }
-
-    public void setBirthDate(Date birthDate) {
-        this.birthDate = birthDate;
-    }
-
-    public Date getMeet_date() {
-        return meet_date;
-    }
-
-    public void setMeet_date(Date meet_date) {
-        this.meet_date = meet_date;
-    }
-
-    @Override
-    public String toString() {
-        return "Contact{" +
-                "id=" + id +
-                ", imageUrl='" + imageUrl + '\'' +
-                ", name='" + name + '\'' +
-                ", surname='" + surname + '\'' +
-                ", birthDate=" + birthDate +
-                ", meet_date=" + meet_date +
-                '}';
-    }
+    private Date meetDate;
+    @ManyToOne
+    @JoinColumn(name="sex_id", nullable=false)
+    private Sex sex;
+    @ManyToOne
+    @JoinColumn(name="status_id", nullable=false)
+    private Status status;
+    @ManyToOne
+    @JoinColumn(name="note_id", nullable=false)
+    private Note note;
+    @ManyToOne
+    @JoinColumn(name="meet_place_id", nullable=false)
+    private Street meetPlace;
+    @ManyToOne
+    @JoinColumn(name="home_dir_id", nullable=false)
+    private Street homeDir;
+    @ManyToOne
+    @JoinColumn(name="actual_dir_id", nullable=false)
+    private Street actualDir;
+    @ManyToMany(cascade = { CascadeType.ALL })
+    @JoinTable(
+            name = "Contact_Occupation",
+            joinColumns = { @JoinColumn(name = "contact_id") },
+            inverseJoinColumns = { @JoinColumn(name = "occupation_id") }
+    )
+    Set<Occupation> occupations = new HashSet<>();
+    @ManyToMany(cascade = { CascadeType.ALL })
+    @JoinTable(
+            name = "Contact_Social",
+            joinColumns = { @JoinColumn(name = "contact_id") },
+            inverseJoinColumns = { @JoinColumn(name = "social_id") }
+    )
+    Set<Social> socials = new HashSet<>();
+    @ManyToMany(cascade = { CascadeType.ALL })
+    @JoinTable(
+            name = "Contact_Object",
+            joinColumns = { @JoinColumn(name = "contact_id") },
+            inverseJoinColumns = { @JoinColumn(name = "object_id") }
+    )
+    Set<Object> objects = new HashSet<>();
+    @ManyToMany(cascade = { CascadeType.ALL })
+    @JoinTable(
+            name = "Contact_Img",
+            joinColumns = { @JoinColumn(name = "contact_id") },
+            inverseJoinColumns = { @JoinColumn(name = "img_id") }
+    )
+    Set<Img> imgs = new HashSet<>();
 }
